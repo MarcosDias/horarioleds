@@ -1,0 +1,59 @@
+project horario{
+	infrastructure{
+		basePackage = "br.com.leds.horario"
+		projectVersion = "1.0"
+		language = {@name: "java", @version:"8"}
+		framework = {@name: "SpringRoo",@version:"1.2"}
+		orm = {@name: "HIBERNATE", @version: "3"}
+		database = {
+				@version:"5",
+				@name: "HYPERSONIC_IN_MEMORY",				
+		}
+	}
+	
+	interface IHorario{
+		HtmlView interfaceWeb => appHorario
+		RestFull  interfaceRest => appHorario
+	}
+	
+	application appHorario{
+		composedBy domHorarioLeds.*
+	}
+	
+	domain domHorarioLeds{
+		module main
+		{
+			enum Turno
+			{
+				MATUTINO,VERSPERTINO,INTEGRAL				
+			}
+			
+			enum DiaSemana
+			{
+				Segunda,Terca,Quarta,Quinta,Sexta				
+			}
+			
+			entity Curso{
+				private int codigo @pk @min(5) @null(false)
+				private String nome @null(false)
+				private Turno turno @null(false)				
+			}
+			
+			entity Aluno {
+				private String cpf @pk	@null(false)
+				private String matricula @unique(true) @null(false)
+				private String nome @null(false)
+				private Datetime dataNascimento @null(false)
+				private Curso curso @null(false)
+				private List<Horario> horarios							
+			}
+			
+			entity Horario{
+				private DiaSemana dia @null(false)
+				private Datetime horaEntrada @null(false)
+				private Datetime horaSaida @null(false)
+			}
+		}
+	}
+	
+}
